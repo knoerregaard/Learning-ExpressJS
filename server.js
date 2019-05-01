@@ -1,15 +1,20 @@
+/*
+ * Server
+ * 
+ */
+
 const express = require('express')
 const app = express()
 const cors = require('cors');
 const MongoClient = require('mongodb').MongoClient;
-const MONGO_URL = 'mongodb+srv://mongouser:mongo123@cluster0-cpb0x.mongodb.net/test?retryWrites=true';
+const MONGO_URL = 'mongodb+srv://<username>:<password>@cluster0-cpb0x.mongodb.net/<database>?retryWrites=true';
 
 let db = "";
 
 MongoClient.connect(MONGO_URL, function (err, client) {
   if (err) throw err;
 
-  db = client.db('test');
+  db = client.db('');
 
 }); 
 
