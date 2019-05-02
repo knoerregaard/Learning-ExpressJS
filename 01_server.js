@@ -1,7 +1,7 @@
 /*
  * Subject : ExpressJS Server
  * Source  : https://expressjs.com/
- * This server is written in JavaScript
+ * This server is written in pure JavaScript
  * The server is responsible for 
  * - Setup middleware
  * - handle incomming request from clients
@@ -48,13 +48,24 @@ app.use(express.json());
 
 //---- Setting up requesthandlers START ----//
 
-app.get('/', (req, res) => {
+app.get('/cat', (req, res) => {
     //cats is a collection in the database
+    //One cat is returned
     db.collection('cats').findOne({kattenavn: "mis"}, function (findErr, result) {
         if (findErr) throw findErr;
-        console.log(result.name);
+        console.log(result);
+        res.status(200).send(result)
       });
-    res.status(200).send(result)
+});
+
+app.get('/cats', (req, res) => {
+    //cats is a collection in the database
+    //Multiple cats are returned
+    db.collection('cats').find().toArray(function (findErr, result) {
+        if (findErr) throw findErr;
+        console.log(result);
+        res.status(200).send(result)
+      });
 });
 
 app.get('/test/:name/:id', (req, res)=>{

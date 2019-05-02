@@ -45,12 +45,22 @@ app.use(express.json());
 
 //---- Setting up requesthandlers START ----//
 
-app.get('/', (req, res) => {
+app.get('/cat', (req, res) => {
     //cats is a collection in the database
+    //One cat is returned
     db.collection('cats').findOne({kattenavn: "mis"}, function (findErr, result) {
         if (findErr) throw findErr;
         console.log(result);
-        
+        res.status(200).send(result)
+      });
+});
+
+app.get('/cats', (req, res) => {
+    //cats is a collection in the database
+    //Multiple cats are returned
+    db.collection('cats').find().toArray(function (findErr, result) {
+        if (findErr) throw findErr;
+        console.log(result);
         res.status(200).send(result)
       });
 });
