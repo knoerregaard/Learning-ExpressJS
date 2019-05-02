@@ -7,6 +7,8 @@
  * To structure your server better, you can do group you requesthandlers into
  * categories and seperate files using ExpressJS/Router.
  * 
+ * In this server we include a module named 'birds'. Then by using app.use() we can include routes from 
+ * that module.
  */
 
 const express = require('express')
@@ -14,7 +16,7 @@ const app = express()
 const cors = require('cors');
 const MongoClient = require('mongodb').MongoClient;
 const MONGO_URL = 'mongodb+srv://mongouser:mongo123@cluster0-cpb0x.mongodb.net/test?retryWrites=true';
-
+const birds = require('./birds.routes')
 let db = "";
 
 MongoClient.connect(MONGO_URL, function (err, client) {
@@ -66,14 +68,10 @@ app.get('/cats', (req, res) => {
       });
 });
 
-app.get('/test/:name/:id', (req, res)=>{
-    console.log(req.params)
-    res.status(200).send("Hello from test");
-})
-app.post('/new-order',(req, res)=>{
-    console.log(req);
-    res.send("Tak");
-})
+// Here we include the birds router. In order to reach the birds webapi, you will need to go through /birds
+// as stated in the first argument.
+app.use('/birds', birds)
+
 //---- Setting up requesthandlers END ----//
 
 //The app is instantiated and ready to go
