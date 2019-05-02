@@ -1,6 +1,14 @@
 /*
- * Server
- * 
+ * Subject : ExpressJS Server
+ * Source  : https://expressjs.com/
+ * This server is written in JavaScript
+ * The server is responsible for 
+ * - Setup middleware
+ * - handle incomming request from clients
+ * - handle database communication
+ * - manipulate data when nessecary
+ * - initiating the server
+ * Change <username>, <password>, <database> and <collection> where needed.
  */
 
 const express = require('express')
@@ -13,58 +21,43 @@ let db = "";
 
 MongoClient.connect(MONGO_URL, function (err, client) {
   if (err) throw err;
-
   db = client.db('');
-
 }); 
 
   
-// process.env.PORT er relevant når du publicere 
-// serveren til fx Heroku
+// process.env.PORT is relevant when you use Heroku as a host.
+const PORT = 3000 |  process.env.PORT;
 
-const PORT = [3000, process.env.PORT];
 
-//Corsproblematikker opstår når du forsøger at lave kald på 
-//tværs af domæner. Med pakken cors kan vi diktere hvilke indkomne klient
-//opkald som vores server må tillade.
+//---- Setting up middleware START ----//
+
+// Whenever you make cross-domain request you will need to handle cores setup.
+// You have to whitelist clients ip adresses, or allow certain ip addresses to make 
+// reuqest to your server. Below I am allowing every request to access my server.
 app.use(cors({
     'Access-Control-Allow-Origin': '*'
 }));
 
-//Encoding definition der er nødvendig for at parse urlencoded indhold
+// express.urlencoded() is a method built in express to recognize the incoming Request Object as strings or arrays.
 app.use(express.urlencoded({
     extended: true
 }));
 
-//Vi ønsker at parse indkomne request med Json. Erstattede bodyparser
+//express.json() is a method inbuilt in express to recognize the incoming Request Object as a JSON Object
 app.use(express.json());
 
-// Array med ojekter
-let bookings = [
-    {name : 'a'},
-    {name : 'b'},
-    {name : 'c'},
-    {name : 'd'}
-]
+//---- Setting up middleware END ----//
 
-// requesthandler af typen GET. Matcher mønstret?
+//---- Setting up requesthandlers START ----//
 
 app.get('/', (req, res) => {
+    //cats is a collection in the database
     db.collection('cats').findOne({kattenavn: "mis"}, function (findErr, result) {
         if (findErr) throw findErr;
         console.log(result.name);
       });
     res.status(200).send(result)
 });
-
-
-app.get('/bookings', (req, res)=>{
-    res.status(200).send(bookings)
-})
-app.get('/bookings/:id', (req, res)=>{
-    console.log(req.params);
-    res.status(200).send(bookings)
-})
 
 app.get('/test/:name/:id', (req, res)=>{
     console.log(req.params)
@@ -74,5 +67,7 @@ app.post('/new-order',(req, res)=>{
     console.log(req);
     res.send("Tak");
 })
+//---- Setting up requesthandlers END ----//
 
-app.listen(PORT[0], () => console.log(`Example app listening on port ${PORT[0]}!`))
+//The app is instantiated and ready to go
+app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
