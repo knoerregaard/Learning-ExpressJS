@@ -6,6 +6,7 @@
  * A server application can have lots of endpoints - maybe hundreds of endpoints.
  * To structure your server better, you can do group you requesthandlers into
  * categories and seperate files using ExpressJS/Router.
+ * 
  */
 
 const express = require('express')
